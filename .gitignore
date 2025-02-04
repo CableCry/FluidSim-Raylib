@@ -1,5 +1,4 @@
 .vscode/
 FluidSim.code-workspace
-Makefile
 *.exe
 releases/
