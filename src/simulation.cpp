@@ -53,7 +53,6 @@ float Simulation::generate_random_num(float min, float max)
 
 Simulation::Simulation()
 {
-    // Example dimensions
     screenWidth  = 1024;
     screenHeight = 1024;
     isSpewerOn = false;
@@ -73,7 +72,6 @@ Simulation::Simulation()
 
     fluid = new Fluid(N, diff, visc, dt);
 
-    // We'll calculate cellSize based on screenWidth / N
     cellSize = (float)screenWidth / (float)N;
 
     addWind();
@@ -169,7 +167,7 @@ void Simulation::update()
         handleSpewer();
     }
 
-    if (IsKeyPressed(KEY_R))    // Get rid of all density to clear screen
+    if (IsKeyPressed(KEY_R))    // Gets rid of all density to clear screen
     {
         int totalCells = fluid->size * fluid->size;
         std::fill(fluid->density, fluid->density + totalCells, 0.0f);
@@ -185,16 +183,13 @@ void Simulation::update()
         int mouseX = GetMouseX();
         int mouseY = GetMouseY();
 
-        // Convert screen coordinates to grid indices.
         int gridX = static_cast<int>(mouseX / cellSize);
         int gridY = static_cast<int>(mouseY / cellSize);
 
-        // Define a brush size (for example, 5x5 cells) for removal.
         const int brushSize = 10;
         int startX = gridX - brushSize / 2;
         int startY = gridY - brushSize / 2;
 
-        // Call removeObstacle to clear the brush area.
         fluid->removeObstacle(startX, startY, brushSize, brushSize);
     }
 
@@ -203,16 +198,13 @@ void Simulation::update()
         int mouseX = GetMouseX();
         int mouseY = GetMouseY();
         
-        // Convert screen coordinates to grid coordinates
         int gridX = static_cast<int>(mouseX / cellSize);
         int gridY = static_cast<int>(mouseY / cellSize);
         
-        // Set a brush size, for example, a 5x5 block of cells.
         const int brushSize = 5;
         int startX = gridX - brushSize / 2;
         int startY = gridY - brushSize / 2;
         
-        // Add the obstacle in the brush area.
         fluid->addObstacle(startX, startY, brushSize, brushSize);
     }
 
@@ -224,11 +216,10 @@ void Simulation::draw()
 {
     int N = fluid->size;
     
-    // Loop over each cell in the grid.
     for (int j = 0; j < N; j++) {
         for (int i = 0; i < N; i++) {
-            int idx = IX(i, j);           // 1D index for the cell
-            int pixelIndex = idx * 4;       // Each pixel has 4 bytes (RGBA)
+            int idx = IX(i, j);           
+            int pixelIndex = idx * 4;     
 
             if (fluid->obstacle[idx]) {
                 pixelData[pixelIndex + 0] = 190;  // R
@@ -236,7 +227,7 @@ void Simulation::draw()
                 pixelData[pixelIndex + 2] = 183;  // B
                 pixelData[pixelIndex + 3] = 100;  // A
             } else {
-                // Otherwise, use the fluid density to compute a grayscale color.
+
                 float d = fluid->density[idx];
                 d = (d < 0) ? 0 : ((d > 255) ? 255 : d);
                 unsigned char val = static_cast<unsigned char>(d);
@@ -269,7 +260,6 @@ void Simulation::handleMouseClick_Left()
         int mouseX = GetMouseX();
         int mouseY = GetMouseY();
 
-        // Convert screen coords -> fluid grid coords
         int i = (int)(mouseX / cellSize);
         int j = (int)(mouseY / cellSize);
 
@@ -311,10 +301,10 @@ void Simulation::handleSpewer()
     fluid->addDensity(i-1, j, 127.0f);         // West
     fluid->addDensity(i, j+1, 127.0f);         // North
     fluid->addDensity(i, j-1, 127.0f);         // South
-    fluid->addDensity(i+1, j+1, 63.0f);       // North West
-    fluid->addDensity(i+1, j-1, 63.0f);       // South West
-    fluid->addDensity(i-1, j+1, 63.0f);       // North East
-    fluid->addDensity(i-1, j-1, 63.0f);       // South East
+    fluid->addDensity(i+1, j+1, 63.0f);        // North West
+    fluid->addDensity(i+1, j-1, 63.0f);        // South West
+    fluid->addDensity(i-1, j+1, 63.0f);        // North East
+    fluid->addDensity(i-1, j-1, 63.0f);        // South East
 
 
     float velocityX = stb_perlin_noise3((float)i*0.05f,
@@ -324,9 +314,6 @@ void Simulation::handleSpewer()
     float velocityY = stb_perlin_noise3((float)i*0.05f, 
                                         (float)j*0.05f, 
                                         t + 100.0f,0,0,0);
-
-    // float normalized_VelX = (velocityX * 2.0f) - 1.0f;
-    // float normalized_VelY = (velocityY * 2.0f) - 1.0f;
 
     fluid->addVelocity(i, j, velocityX, velocityY);
     fluid->addVelocity(i+1, j, velocityX, velocityY);         // Center

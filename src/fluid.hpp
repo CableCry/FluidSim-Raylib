@@ -36,19 +36,19 @@ public:
 
     void step();
 
-    int                     size;    // N
-    float                   dt;      // timestep
-    float                   diff;    // diffusion
-    float                   visc;    // viscosity
+    int                     size;       // N
+    float                   dt;         // timestep
+    float                   diff;       // diffusion
+    float                   visc;       // viscosity
 
-    float*                  s;       // temp array for density
-    float*                  density; // density array
+    float*                  s;          // temp array for density
+    float*                  density;    // density array
 
-    float*                  Vx;      // velocity x
-    float*                  Vy;      // velocity y
-    float*                  Vx0;     // temp velocity x
-    float*                  Vy0;     // temp velocity y
-    bool*                   obstacle;
+    float*                  Vx;         // velocity x
+    float*                  Vy;         // velocity y
+    float*                  Vx0;        // temp velocity x
+    float*                  Vy0;        // temp velocity y
+    bool*                   obstacle;   // obstacle array
 
 
 private:

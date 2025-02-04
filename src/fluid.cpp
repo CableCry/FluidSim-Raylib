@@ -1,6 +1,6 @@
 #include "fluid.hpp"
 #include <new>
-#include <bits/stdc++.h>    // for memset
+#include <bits/stdc++.h>
 
 
 
@@ -62,7 +62,7 @@ void Fluid::addInlet(int x, int y, float densityInjection, float vxInjection, fl
     inlet.densityChange = densityInjection;
     inlet.vxInjection = vxInjection;
     inlet.vyInjection = vyInjection;
-    inlet.active = false;  // source is active by default
+    inlet.active = false;
     sources.push_back(inlet);
 }
 
@@ -75,7 +75,7 @@ void Fluid::addOutlet(int x, int y, float densityRemoval, float vxInjection, flo
     outlet.densityChange = -densityRemoval; // negative to remove fluid
     outlet.vxInjection = vxInjection;
     outlet.vyInjection = vyInjection;
-    outlet.active = false;  // source is active by default
+    outlet.active = false;
     sources.push_back(outlet);
 }
 
@@ -133,7 +133,7 @@ void Fluid::step()
     for (const FluidSource& src : sources) {
         if (src.active) {
             int idx = IX(src.x, src.y);
-            density[idx] += src.densityChange; // Might multiply by dt for time scaling
+            density[idx] += src.densityChange;
             Vx[idx] += src.vxInjection;
             Vy[idx] += src.vyInjection;
         }
@@ -160,7 +160,6 @@ void Fluid::step()
     for (int j = 0; j < size; j++) {
         for (int i = 0; i < size; i++) {
             if (obstacle[IX(i,j)]) {
-                // Zero out density and velocities in obstacle cells.
                 density[IX(i,j)] = density[IX(i,j)];
                 Vx[IX(i,j)] = (Vx[IX(i,j)] * -0.76);
                 Vy[IX(i,j)] = (Vy[IX(i,j)] * -0.76);
